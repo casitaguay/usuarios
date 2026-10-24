@@ -262,8 +262,8 @@ funciona, la antigua no, y que otra sesión abierta de la misma cuenta deja de s
   exista o no la cuenta.
 - **FR-030**: Los enlaces enviados por email DEBEN ser imposibles de adivinar y el sistema NO DEBE
   guardarlos de forma que, con acceso a los datos almacenados, puedan reutilizarse.
-- **FR-031**: Los registros técnicos (logs) NO DEBEN contener contraseñas, enlaces de un solo uso ni
-  más datos personales de los imprescindibles.
+- **FR-031**: Los registros técnicos (logs) solo PUEDEN identificar al usuario por su identificador
+  interno; NO DEBEN contener contraseñas, enlaces de un solo uso, emails ni nombres.
 
 **Interfaz y notificaciones**
 
@@ -318,8 +318,10 @@ funciona, la antigua no, y que otra sesión abierta de la misma cuenta deja de s
   se usan sin desplazamiento horizontal en pantallas de móvil de 360 px de ancho.
 - **SC-009**: El 95% de las páginas de la feature se muestran en menos de 2 segundos con 100 sesiones
   simultáneas activas y 10.000 usuarios registrados, en una sola instancia.
-- **SC-010**: Pasar de una a varias instancias de la aplicación no requiere cambios de código, solo
-  de configuración, y las sesiones siguen siendo válidas en cualquier instancia.
+- **SC-010**: Pasar de una a varias instancias solo requiere añadir la dependencia de sesiones
+  compartidas en base de datos y configuración, sin modificar el código de la plantilla; las
+  sesiones siguen siendo válidas en cualquier instancia. El límite de peticiones por origen se
+  aplica por instancia.
 
 ## Assumptions
 

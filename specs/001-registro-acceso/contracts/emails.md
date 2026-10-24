@@ -3,8 +3,10 @@
 **Feature**: `001-registro-acceso`
 
 Todos los emails se envían de forma asíncrona tras confirmar la transacción (research R8), en
-español, en versión HTML y texto plano. Las plantillas son sobreescribibles por los proyectos
-derivados (`templates/email/*`). Ningún email incluye la contraseña. Los enlaces usan la URL
+español, en versión HTML y texto plano. Las plantillas del core están en
+`templates/usuarios/email/` y un proyecto derivado las sustituye creando el mismo nombre en
+`personalizado/email/`; los textos se sustituyen con claves en su `messages.properties` (research
+R18). Ningún email incluye la contraseña. Los enlaces usan la URL
 pública configurada en `usuarios.url-publica`.
 
 | Plantilla | Cuándo se envía | Contenido mínimo | Requisito |

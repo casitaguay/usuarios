@@ -82,8 +82,11 @@ Cada apartado sigue el formato Decisión / Justificación / Alternativas conside
   - Cierre de "todas las sesiones" o "las demás sesiones" de un usuario: `SessionRegistry` de Spring
     Security con `HttpSessionEventPublisher`, sin límite de sesiones concurrentes (FR-037).
 - **Justificación**: todo es nativo de Spring. Para varias instancias (SC-010), Spring Session
-  JDBC sustituye la sesión y el registro (`SpringSessionBackedSessionRegistry`) sin tocar la
-  lógica: se deja documentado y fuera de esta feature.
+  JDBC sustituye la sesión y el registro sin tocar código: `SesionConfig` declara
+  `SessionRegistryImpl` con `@ConditionalOnMissingBean`, y una configuración con
+  `@ConditionalOnClass(FindByIndexNameSessionRepository.class)` registra
+  `SpringSessionBackedSessionRegistry` en cuanto la dependencia está presente. Añadir la
+  dependencia y su configuración queda fuera de esta feature.
 - **Alternativas**: Spring Session JDBC desde el inicio (descartado por simplicidad, aclaración 1).
 
 ## R7. Enlaces de un solo uso
@@ -110,6 +113,8 @@ Cada apartado sigue el formato Decisión / Justificación / Alternativas conside
   interfaz web en `localhost:8025`.
 - **Alternativas**: envío síncrono (descartado: fuga de tiempos y acoplamiento al SMTP); cola
   persistente de envíos (descartado por simplicidad; queda como mejora futura).
+- **Nota**: la ubicación de las plantillas y cómo las sustituye un proyecto derivado se definen en
+  R18.
 
 ## R9. Limitación de peticiones por origen
 
@@ -119,7 +124,8 @@ Cada apartado sigue el formato Decisión / Justificación / Alternativas conside
   durante 5 minutos. La IP se toma de la conexión; las cabeceras `X-Forwarded-For` solo se tienen
   en cuenta si se configura un proxy de confianza.
 - **Justificación**: los requisitos son simples y para una instancia; implementarlo es poco código
-  y evita una dependencia (principio III).
+  y evita una dependencia (principio III). Con varias instancias el límite es por instancia; un
+  límite global corresponde al proxy inverso o a una feature posterior.
 - **Alternativas**: Bucket4j (descartado: dependencia innecesaria para una ventana fija);
   limitación en el proxy inverso (complementaria, no sustituye: la plantilla no puede suponer que
   existe un proxy).
@@ -128,8 +134,10 @@ Cada apartado sigue el formato Decisión / Justificación / Alternativas conside
 
 - **Decisión**: validador propio en `usuarios-core`: longitud entre 12 y 128 caracteres (contados
   como puntos de código Unicode, tras normalización NFKC), lista de contraseñas prohibidas incluida
-  como recurso (las 10.000 más comunes de una lista pública con licencia compatible, comparadas sin
-  distinguir mayúsculas), rechazo si contiene el email (parte local) o el nombre, y reglas
+  como recurso (las 10.000 más comunes de SecLists, fichero
+  `Passwords/Common-Credentials/10k-most-common.txt`, licencia MIT; verificar la licencia vigente
+  al incorporarla y citar fuente, licencia y fecha en la cabecera del fichero y en el README;
+  comparadas sin distinguir mayúsculas), rechazo si contiene el email (parte local) o el nombre, y reglas
   opcionales de mayúscula y carácter especial desactivadas por defecto.
 - **Justificación**: FR-023 a FR-026; sin servicios externos (principio IV).
 - **Alternativas**: Passay (descartado: dependencia para reglas que son pocas líneas); consulta a
@@ -197,3 +205,43 @@ Cada apartado sigue el formato Decisión / Justificación / Alternativas conside
   `aria-describedby`, foco en el primer error, contraste de Bootstrap por defecto y diseño
   responsive de Bootstrap. Textos en `messages.properties` (español), sobreescribibles.
 - **Justificación**: SC-008 y FR-035.
+
+## R18. Personalización de plantillas y textos
+
+- **Decisión**:
+  - Las plantillas de email del core viven en `templates/usuarios/email/` dentro de
+    `usuarios-core`.
+  - El motor de plantillas de email usa dos resolvedores en orden: primero
+    `classpath:/personalizado/email/` (con comprobación de existencia, así que solo se usa si el
+    fichero existe) y después el del core. Un proyecto derivado sustituye un email creando, por
+    ejemplo, `usuarios-web/src/main/resources/personalizado/email/verificacion.html`.
+  - Los textos del core (asuntos y contenido de los emails) van en `usuarios/mensajes.properties`.
+    La aplicación declara `spring.messages.basename: messages,usuarios/mensajes`, de modo que una
+    clave repetida en el `messages.properties` del proyecto prevalece sobre la del core.
+  - Las vistas web viven en `usuarios-web`, que cada proyecto derivado copia y adapta directamente.
+- **Justificación**: no depende del orden del classpath, que cambia entre el IDE, Maven y el WAR;
+  cumple el principio II (personalizar sin modificar `usuarios-core`).
+- **Alternativas**: misma ruta de plantilla en ambos módulos (descartado: gana la primera del
+  classpath, comportamiento frágil y distinto según cómo se arranque).
+
+## R19. Análisis de seguridad y protección de `main`
+
+- **Decisión**: workflow `.github/workflows/codeql.yml` con CodeQL para `java-kotlin`, compilación
+  manual con JDK 25 y `./mvnw`, consultas `security-extended`, en push y pull request a `main` y
+  semanal. Tras su primera ejecución, el ruleset de `main` exige los checks de CI y CodeQL.
+- **Justificación**: la constitución (principio VII y flujo de desarrollo) exige CodeQL activo y
+  CI en verde para integrar. Un workflow versionado deja la configuración en el repositorio y es
+  revisable.
+- **Riesgo**: si CodeQL aún no admite Java 25, se compila para el análisis con la versión más alta
+  que admita, sin cambiar el proyecto.
+- **Alternativas**: configuración por defecto de CodeQL desde los ajustes de GitHub (descartado:
+  no permite fijar el JDK ni queda versionada).
+
+## R20. Prueba de rendimiento
+
+- **Decisión**: test `RendimientoIT` con la aplicación en puerto aleatorio, `java.net.http.HttpClient`
+  e hilos virtuales de Java 25, sin dependencias nuevas. Se excluye del build normal y se ejecuta
+  con el perfil Maven `rendimiento`.
+- **Justificación**: SC-009 debe comprobarse, pero una prueba de un minuto dependiente de la
+  máquina haría la CI lenta e inestable.
+- **Alternativas**: JMeter o Gatling (descartado: herramientas externas para una sola medición).

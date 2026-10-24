@@ -14,6 +14,7 @@ Guía para arrancar la aplicación en local y comprobar de principio a fin que l
 - Mailpit para capturar los emails: ejecutable de Windows desde su página de releases en GitHub.
   SMTP en `localhost:1025` e interfaz web en <http://localhost:8025>.
 - No hace falta Maven instalado: el repositorio incluye el wrapper `mvnw`.
+- (Opcional) Tomcat 11, solo para validar el despliegue del WAR en un servidor externo.
 
 ## Preparación (una sola vez)
 
@@ -38,6 +39,15 @@ Guía para arrancar la aplicación en local y comprobar de principio a fin que l
 
 Resultado esperado: compilación correcta y todos los tests en verde, incluidos los de integración
 contra `usuarios_test`. Flyway crea el esquema en el arranque de los tests.
+
+Prueba de rendimiento (SC-009), fuera del build normal porque dura alrededor de un minuto:
+
+```bash
+./mvnw verify -Prendimiento
+```
+
+Resultado esperado: el percentil 95 de los tiempos de respuesta con 100 sesiones simultáneas es
+inferior a 2 segundos.
 
 ## Arrancar la aplicación
 
