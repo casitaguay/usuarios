@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: pagina(~{::title}, ~{::main})}">
+<head>
+    <title th:text="#{recuperacion.titulo}">Recuperar la contraseña</title>
+</head>
+<body>
+<main id="contenido">
+    <h1 th:text="#{recuperacion.titulo}">Recuperar la contraseña</h1>
+    <p th:text="#{recuperacion.texto}">Indica tu email y, si tienes cuenta, te enviaremos un enlace para crear una contraseña nueva.</p>
+
+    <form th:action="@{/recuperacion}" th:object="${formulario}" method="post" novalidate>
+        <div th:replace="~{fragmentos :: resumen-errores}"></div>
+
+        <div class="mb-3">
+            <label for="email" class="form-label" th:text="#{campo.email}">Email</label>
+            <input type="email" id="email" th:field="*{email}" class="form-control" th:errorclass="is-invalid"
+                   maxlength="254" autocomplete="email" required
+                   th:attr="aria-describedby=${#fields.hasErrors('email')} ? 'email-error'">
+            <div id="email-error" class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" th:text="#{recuperacion.enviar}">Enviar enlace</button>
+    </form>
+
+    <p class="mt-4"><a th:href="@{/acceso}" th:text="#{recuperacion.volver}">Volver a iniciar sesión</a></p>
+</main>
+</body>
+</html>

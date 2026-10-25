@@ -55,7 +55,7 @@ class LimitePeticionesIT extends BaseIT {
                 .andExpect(content().string(not(containsString("@"))));
     }
 
-    /** /recuperacion aún no existe (historia 3): basta con que la petición no se frene. */
+    /** Cada ruta responde distinto (redirección o formulario con errores): basta con que no se frene. */
     private static ResultMatcher noFrenada() {
         return resultado -> assertThat(resultado.getResponse().getStatus()).isNotEqualTo(429);
     }

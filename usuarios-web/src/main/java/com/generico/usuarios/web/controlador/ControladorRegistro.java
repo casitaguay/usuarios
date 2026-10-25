@@ -54,8 +54,7 @@ public class ControladorRegistro {
                 registro.registrar(formulario.getNombre(), formulario.getEmail(), formulario.getContrasena());
                 return "redirect:/registro/enviado";
             } catch (ContrasenaNoValidaException e) {
-                Object[] limites = {politica.reglas().longitudMinima(), politica.reglas().longitudMaxima()};
-                e.getIncumplidos().forEach(clave -> errores.rejectValue("contrasena", clave, limites, null));
+                ErroresContrasena.rechazar(errores, e, politica.reglas());
             }
         }
         formulario.setContrasena(null);

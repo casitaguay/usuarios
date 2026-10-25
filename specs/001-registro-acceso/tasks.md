@@ -213,18 +213,25 @@ establecer una contraseña nueva y comprobar que la nueva funciona y la antigua 
 
 ### Tests for User Story 3 ⚠️
 
-- [ ] T066 [P] [US3] Escribir `core-test/servicio/ServicioRecuperacionIT.java`: solicitud para email inexistente no envía nada y no lanza error; para email existente envía `recuperacion` con enlace válido 1 h e invalida los anteriores; completar actualiza el hash, consume el enlace, expira todas las sesiones (verificado con `ServicioSesiones` simulado), levanta el bloqueo, pone `ACTIVO` una cuenta pendiente y envía `contrasena-cambiada`; enlace a 1 h + 1 s, usado o manipulado devuelve "no válido"; contraseña que incumple la política no consume el enlace
-- [ ] T067 [P] [US3] Escribir `web-test/controlador/RecuperacionControladorIT.java`: todas las rutas de recuperación permitidas sin sesión; `POST /recuperacion` redirige igual exista o no el email; `GET /recuperacion/nueva` con enlace no válido muestra el mensaje y la opción de pedir otro; `POST /recuperacion/nueva` correcto redirige a `/acceso?recuperada` y una sesión previa del usuario deja de dar acceso a `/inicio`; confirmación distinta o contraseña inválida devuelve 200 con errores; sin CSRF da 403
+- [X] T066 [P] [US3] Escribir `core-test/servicio/ServicioRecuperacionIT.java`: solicitud para email inexistente no envía nada y no lanza error; para email existente envía `recuperacion` con enlace válido 1 h e invalida los anteriores; completar actualiza el hash, consume el enlace, expira todas las sesiones (verificado con `ServicioSesiones` simulado), levanta el bloqueo, pone `ACTIVO` una cuenta pendiente y envía `contrasena-cambiada`; enlace a 1 h + 1 s, usado o manipulado devuelve "no válido"; contraseña que incumple la política no consume el enlace
+- [X] T067 [P] [US3] Escribir `web-test/controlador/RecuperacionControladorIT.java`: todas las rutas de recuperación permitidas sin sesión; `POST /recuperacion` redirige igual exista o no el email; `GET /recuperacion/nueva` con enlace no válido muestra el mensaje y la opción de pedir otro; `POST /recuperacion/nueva` correcto redirige a `/acceso?recuperada` y una sesión previa del usuario deja de dar acceso a `/inicio`; confirmación distinta o contraseña inválida devuelve 200 con errores; sin CSRF da 403
 
 ### Implementation for User Story 3
 
-- [ ] T068 [P] [US3] Crear la plantilla `core-res/templates/usuarios/email/recuperacion.html`/`.txt` según `contracts/emails.md`, con su asunto y textos en `core-res/usuarios/mensajes.properties`
-- [ ] T069 [US3] Implementar `core/servicio/ServicioRecuperacion.java`: `solicitar(email)` (si existe, emite enlace `RECUPERACION_CONTRASENA` con `usuarios.recuperacion.validez` y publica `recuperacion`; siempre devuelve sin indicar el caso), `comprobar(valor)` sin consumir y `completar(valor, nuevaContrasena)` (valida política, consume el enlace, cambia el hash, `registrarExito`, verifica si estaba pendiente, `expirarTodas` y publica `contrasena-cambiada`)
-- [ ] T070 [P] [US3] Crear `web/formulario/FormularioNuevaContrasena.java` (`t`, `contrasena`, `confirmacion` con validación de coincidencia)
-- [ ] T071 [US3] Implementar `web/controlador/ControladorRecuperacion.java` (`GET/POST /recuperacion` con `FormularioEmail`, `GET /recuperacion/enviado`, `GET/POST /recuperacion/nueva`; el enlace viaja en campo oculto, nunca en la URL de redirección)
-- [ ] T072 [US3] Crear las vistas `web-res/templates/recuperacion.html`, `recuperacion-enviado.html` y `recuperacion-nueva.html` (requisitos de contraseña visibles y errores accesibles) y sus textos en `web-res/messages.properties`
+- [X] T068 [P] [US3] Crear la plantilla `core-res/templates/usuarios/email/recuperacion.html`/`.txt` según `contracts/emails.md`, con su asunto y textos en `core-res/usuarios/mensajes.properties`
+- [X] T069 [US3] Implementar `core/servicio/ServicioRecuperacion.java`: `solicitar(email)` (si existe, emite enlace `RECUPERACION_CONTRASENA` con `usuarios.recuperacion.validez` y publica `recuperacion`; siempre devuelve sin indicar el caso), `comprobar(valor)` sin consumir y `completar(valor, nuevaContrasena)` (valida política, consume el enlace, cambia el hash, `registrarExito`, verifica si estaba pendiente, `expirarTodas` y publica `contrasena-cambiada`)
+- [X] T070 [P] [US3] Crear `web/formulario/FormularioNuevaContrasena.java` (`t`, `contrasena`, `confirmacion` con validación de coincidencia)
+- [X] T071 [US3] Implementar `web/controlador/ControladorRecuperacion.java` (`GET/POST /recuperacion` con `FormularioEmail`, `GET /recuperacion/enviado`, `GET/POST /recuperacion/nueva`; el enlace viaja en campo oculto, nunca en la URL de redirección)
+- [X] T072 [US3] Crear las vistas `web-res/templates/recuperacion.html`, `recuperacion-enviado.html` y `recuperacion-nueva.html` (requisitos de contraseña visibles y errores accesibles) y sus textos en `web-res/messages.properties`
 
 **Checkpoint**: historias 1, 2 y 3 funcionan de forma independiente
+
+**Notas de implementación (historia 3)**:
+
+- T069: `ServicioEnlaces.titular` comprueba un enlace sin consumirlo; `completar` valida la política antes de consumir, así que una contraseña rechazada no gasta el enlace. El email `contrasena-cambiada` se envía desde `ServicioRecuperacion.avisarContrasenaCambiada`, que reutilizará la historia 4.
+- T070: la coincidencia con la confirmación la comprueba el controlador (`ErroresContrasena`, compartido con el registro), para que el error salga en el campo `confirmacion`. El campo oculto `t` no se valida: un enlace vacío o inventado se trata como no válido.
+- T072: la página «enviado» usa la vista genérica `aviso.html`.
+- Al probar el cierre de sesiones apareció un fallo: el principal (`UsuarioAutenticado`) se comparaba por email, como `User`, y una cuenta nueva con el email de otra ya borrada se mezclaba con sus sesiones en el registro. Ahora se compara por id.
 
 ---
 

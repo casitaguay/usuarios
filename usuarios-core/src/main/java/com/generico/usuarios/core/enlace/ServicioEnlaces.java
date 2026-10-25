@@ -58,6 +58,17 @@ public class ServicioEnlaces {
         return repositorio.findByHashValorAndFinalidad(hash, finalidad).map(EnlaceUnUso::getUsuario);
     }
 
+    /** Titular de un enlace válido, sin consumirlo (para mostrar un formulario antes de usarlo). */
+    @Transactional(readOnly = true)
+    public Optional<Usuario> titular(String valor, FinalidadEnlace finalidad) {
+        if (valor == null || valor.isBlank()) {
+            return Optional.empty();
+        }
+        return repositorio.findByHashValorAndFinalidad(hash(valor), finalidad)
+                .filter(enlace -> enlace.esValido(reloj.instant()))
+                .map(EnlaceUnUso::getUsuario);
+    }
+
     static String hash(String valor) {
         try {
             byte[] digest = MessageDigest.getInstance("SHA-256").digest(valor.getBytes(StandardCharsets.UTF_8));

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{email.recuperacion.asunto}">Recupera tu contraseña</title>
+</head>
+<body>
+<p th:text="#{email.saludo(${nombre})}">Hola, Ana:</p>
+<p th:text="#{email.recuperacion.cuerpo}">Para establecer una contraseña nueva, abre este enlace:</p>
+<p><a th:href="${enlace}" th:text="${enlace}">https://ejemplo.invalid/recuperacion/nueva?t=...</a></p>
+<p th:text="#{email.recuperacion.validez(${minutosValidez})}">El enlace es válido durante 60 minutos.</p>
+<p th:text="#{email.recuperacion.no-fuiste}">Si no lo has pedido tú, ignora este email: tu contraseña no cambia.</p>
+<footer th:replace="~{fragmentos.html :: pie}"></footer>
+</body>
+</html>
