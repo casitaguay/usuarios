@@ -6,7 +6,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import jakarta.servlet.RequestDispatcher;
@@ -14,7 +15,6 @@ import jakarta.servlet.RequestDispatcher;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.json.JsonCompareMode;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.generico.usuarios.core.soporte.BaseIT;
@@ -28,14 +28,16 @@ class SeguridadBaseIT extends BaseIT {
     void unaRutaPrivadaSinSesionRedirigeAlAcceso() throws Exception {
         mvc.perform(get("/privada-inexistente"))
                 .andExpect(status().isFound())
-                .andExpect(redirectedUrlPattern("**/acceso"));
+                .andExpect(redirectedUrl("/acceso"));
     }
 
     @Test
     void healthRespondeUpSinDetalles() throws Exception {
         mvc.perform(get("/actuator/health"))
                 .andExpect(status().isOk())
-                .andExpect(content().json("{\"status\":\"UP\"}", JsonCompareMode.STRICT));
+                .andExpect(jsonPath("$.status").value("UP"))
+                .andExpect(jsonPath("$.components").doesNotExist())
+                .andExpect(jsonPath("$.details").doesNotExist());
     }
 
     @Test

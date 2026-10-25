@@ -13,6 +13,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
 /** Credencial temporal de un solo uso. Solo se guarda el hash del valor enviado (FR-030). */
 @Entity
 @Table(name = "enlace_un_uso")
@@ -28,7 +31,8 @@ public class EnlaceUnUso {
     @Enumerated(EnumType.STRING)
     private FinalidadEnlace finalidad;
 
-    @Column(name = "hash_valor", columnDefinition = "char(64)")
+    @Column(name = "hash_valor", length = 64)
+    @JdbcTypeCode(SqlTypes.CHAR)
     private String hashValor;
 
     @Column(name = "creado_en")
