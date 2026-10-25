@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: pagina(~{::title}, ~{::main})}">
+<head>
+    <title th:text="#{verificacion.reenvio.titulo}">Reenviar el enlace de verificación</title>
+</head>
+<body>
+<main id="contenido">
+    <h1 th:text="#{verificacion.reenvio.titulo}">Reenviar el enlace de verificación</h1>
+    <p th:text="#{verificacion.reenvio.texto}">Indica tu email y, si tu cuenta está pendiente, te enviaremos un enlace nuevo.</p>
+
+    <form th:action="@{/verificacion/reenvio}" th:object="${formulario}" method="post" novalidate>
+        <div th:replace="~{fragmentos :: resumen-errores}"></div>
+
+        <div class="mb-3">
+            <label for="email" class="form-label" th:text="#{campo.email}">Email</label>
+            <input type="email" id="email" th:field="*{email}" class="form-control" th:errorclass="is-invalid"
+                   maxlength="254" autocomplete="email" required
+                   th:attr="aria-describedby=${#fields.hasErrors('email')} ? 'email-error'">
+            <div id="email-error" class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" th:text="#{verificacion.reenvio.enviar}">Enviar enlace</button>
+    </form>
+</main>
+</body>
+</html>

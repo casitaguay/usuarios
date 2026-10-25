@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{email.registro-existente.asunto}">Intento de registro con tu email</title>
+</head>
+<body>
+<p th:text="#{email.saludo(${nombre})}">Hola, Ana:</p>
+<p th:text="#{email.registro-existente.cuerpo}">Alguien ha intentado registrarse con tu email, que ya tiene cuenta.</p>
+<p th:text="#{email.registro-existente.recuperar}">Si has olvidado tu contraseña, puedes recuperarla aquí:</p>
+<p><a th:href="${urlRecuperacion}" th:text="${urlRecuperacion}">https://ejemplo.invalid/recuperacion</a></p>
+<p th:text="#{email.registro-existente.ignorar}">Si has sido tú y recuerdas tu contraseña, o no has sido tú, puedes ignorar este email.</p>
+<footer th:replace="~{fragmentos.html :: pie}"></footer>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<!--/* TEXTO DE EJEMPLO. Cada proyecto derivado sustituye esta vista por su texto, revisado por un profesional competente. */-->
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: pagina(~{::title}, ~{::main})}">
+<head>
+    <title>Política de privacidad</title>
+</head>
+<body>
+<main id="contenido">
+    <h1>Política de privacidad</h1>
+    <p class="alert alert-warning"><strong>TEXTO DE EJEMPLO: sustituir y revisar por un profesional competente.</strong></p>
+    <p>Versión <span th:text="${version}">1.0-ejemplo</span>.</p>
+
+    <h2>1. Datos que tratamos</h2>
+    <p>Nombre, email y la contraseña protegida con un algoritmo irreversible. Registramos además la
+        fecha y la versión de los textos legales aceptados.</p>
+
+    <h2>2. Finalidad</h2>
+    <p>Gestionar tu cuenta y el acceso a la aplicación.</p>
+
+    <h2>3. Conservación</h2>
+    <p>Las cuentas que no se verifican se borran automáticamente a los pocos días del registro.</p>
+
+    <h2>4. Derechos</h2>
+    <p>Puedes ejercer tus derechos de acceso, rectificación, supresión y demás que reconoce el RGPD.</p>
+</main>
+</body>
+</html>

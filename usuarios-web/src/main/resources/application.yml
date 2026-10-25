@@ -10,6 +10,10 @@ spring:
     open-in-view: false
   messages:
     basename: messages,usuarios/mensajes
+  web:
+    # Interfaz solo en español (FR-035), sea cual sea el idioma del navegador
+    locale: es
+    locale-resolver: fixed
 
 server:
   error:

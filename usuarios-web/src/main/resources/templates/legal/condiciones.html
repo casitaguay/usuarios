@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<!--/* TEXTO DE EJEMPLO. Cada proyecto derivado sustituye esta vista por su texto, revisado por un profesional competente. */-->
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: pagina(~{::title}, ~{::main})}">
+<head>
+    <title>Condiciones de uso</title>
+</head>
+<body>
+<main id="contenido">
+    <h1>Condiciones de uso</h1>
+    <p class="alert alert-warning"><strong>TEXTO DE EJEMPLO: sustituir y revisar por un profesional competente.</strong></p>
+    <p>Versión <span th:text="${version}">1.0-ejemplo</span>.</p>
+
+    <h2>1. Objeto</h2>
+    <p>Estas condiciones regulan el uso de la aplicación y de la cuenta de usuario.</p>
+
+    <h2>2. Cuenta</h2>
+    <p>La persona usuaria es responsable de mantener la confidencialidad de su contraseña y de la
+        actividad que se realice con su cuenta.</p>
+
+    <h2>3. Uso aceptable</h2>
+    <p>No está permitido usar la aplicación con fines ilícitos ni intentar acceder a cuentas ajenas.</p>
+</main>
+</body>
+</html>

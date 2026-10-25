@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<!--/* Fragmentos comunes de los formularios. */-->
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!--/* Resumen de errores al principio del formulario. Recibe el foco al cargar (autofocus, sin scripts por la CSP). */-->
+<div th:fragment="resumen-errores" th:if="${#fields.hasErrors('*')}"
+     class="alert alert-danger" role="alert" tabindex="-1" autofocus>
+    <p class="mb-1" th:text="#{formulario.errores}">Revisa los campos marcados:</p>
+    <ul class="mb-0">
+        <li th:each="error : ${#fields.detailedErrors()}">
+            <a th:href="|#${error.fieldName}|" th:text="${error.message}">Error</a>
+        </li>
+    </ul>
+</div>
+
+<!--/* Requisitos de la contraseña (FR-026). Necesita el atributo «reglas» en el modelo. */-->
+<div th:fragment="requisitos-contrasena" id="contrasena-requisitos" class="form-text">
+    <span th:text="#{contrasena.requisitos(${reglas.longitudMinima()}, ${reglas.longitudMaxima()})}">
+        Entre 12 y 128 caracteres.
+    </span>
+    <span th:if="${reglas.exigirMayuscula()}" th:text="#{contrasena.requisito.mayuscula}">Al menos una mayúscula.</span>
+    <span th:if="${reglas.exigirCaracterEspecial()}" th:text="#{contrasena.requisito.caracter-especial}">
+        Al menos un carácter que no sea letra ni número.
+    </span>
+</div>
+
+</body>
+</html>

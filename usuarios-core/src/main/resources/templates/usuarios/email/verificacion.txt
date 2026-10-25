@@ -1,0 +1,10 @@
+[#{email.saludo(${nombre})}]
+
+[#{email.verificacion.cuerpo}]
+[(${enlace})]
+
+[#{email.verificacion.validez(${horasValidez})}]
+[#{email.verificacion.no-fuiste}]
+
+--
+[#{email.pie}]

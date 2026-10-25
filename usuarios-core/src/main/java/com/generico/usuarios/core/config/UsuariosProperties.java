@@ -31,6 +31,11 @@ public record UsuariosProperties(
         @Valid @NotNull Email email,
         @Valid @DefaultValue Limpieza limpieza) {
 
+    /** URL absoluta para los enlaces de los emails, p. ej. {@code url("/verificacion?t=...")}. */
+    public String url(String ruta) {
+        return urlPublica.replaceAll("/+$", "") + ruta;
+    }
+
     public record Registro(@DefaultValue("true") boolean habilitado) {
     }
 

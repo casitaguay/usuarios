@@ -1,0 +1,11 @@
+[#{email.saludo(${nombre})}]
+
+[#{email.registro-existente.cuerpo}]
+
+[#{email.registro-existente.recuperar}]
+[(${urlRecuperacion})]
+
+[#{email.registro-existente.ignorar}]
+
+--
+[#{email.pie}]

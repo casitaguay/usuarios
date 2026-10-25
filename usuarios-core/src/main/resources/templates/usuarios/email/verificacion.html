@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{email.verificacion.asunto}">Verifica tu email</title>
+</head>
+<body>
+<p th:text="#{email.saludo(${nombre})}">Hola, Ana:</p>
+<p th:text="#{email.verificacion.cuerpo}">Para activar tu cuenta, abre este enlace:</p>
+<p><a th:href="${enlace}" th:text="${enlace}">https://ejemplo.invalid/verificacion?t=...</a></p>
+<p th:text="#{email.verificacion.validez(${horasValidez})}">El enlace es válido durante 24 horas.</p>
+<p th:text="#{email.verificacion.no-fuiste}">Si no te has registrado, ignora este email.</p>
+<footer th:replace="~{fragmentos.html :: pie}"></footer>
+</body>
+</html>

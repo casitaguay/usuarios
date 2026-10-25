@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<!--/* Página de resultado genérica. Modelo: titulo, texto y, opcionalmente, enlace y textoEnlace (claves de mensaje). */-->
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: pagina(~{::title}, ~{::main})}">
+<head>
+    <title th:text="#{${titulo}}">Aviso</title>
+</head>
+<body>
+<main id="contenido">
+    <h1 th:text="#{${titulo}}">Aviso</h1>
+    <p th:text="#{${texto}}">Texto del aviso.</p>
+    <p th:if="${enlace}"><a th:href="@{${enlace}}" th:text="#{${textoEnlace}}">Continuar</a></p>
+</main>
+</body>
+</html>

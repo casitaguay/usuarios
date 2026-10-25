@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: pagina(~{::title}, ~{::main})}">
+<head>
+    <title th:text="#{registro.titulo}">Crear cuenta</title>
+</head>
+<body>
+<main id="contenido">
+    <h1 th:text="#{registro.titulo}">Crear cuenta</h1>
+
+    <form th:action="@{/registro}" th:object="${formulario}" method="post" novalidate>
+        <div th:replace="~{fragmentos :: resumen-errores}"></div>
+
+        <div class="mb-3">
+            <label for="nombre" class="form-label" th:text="#{registro.nombre}">Nombre</label>
+            <input type="text" id="nombre" th:field="*{nombre}" class="form-control" th:errorclass="is-invalid"
+                   maxlength="100" autocomplete="name" required
+                   th:attr="aria-describedby=${#fields.hasErrors('nombre')} ? 'nombre-error'">
+            <div id="nombre-error" class="invalid-feedback" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></div>
+        </div>
+
+        <div class="mb-3">
+            <label for="email" class="form-label" th:text="#{campo.email}">Email</label>
+            <input type="email" id="email" th:field="*{email}" class="form-control" th:errorclass="is-invalid"
+                   maxlength="254" autocomplete="email" required
+                   th:attr="aria-describedby=${#fields.hasErrors('email')} ? 'email-error'">
+            <div id="email-error" class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+        </div>
+
+        <div class="mb-3">
+            <label for="contrasena" class="form-label" th:text="#{campo.contrasena}">Contraseña</label>
+            <!--/* Sin th:field: la contraseña nunca se devuelve al navegador */-->
+            <input type="password" id="contrasena" name="contrasena" class="form-control"
+                   th:classappend="${#fields.hasErrors('contrasena')} ? 'is-invalid'"
+                   autocomplete="new-password" required
+                   th:attr="aria-describedby=${#fields.hasErrors('contrasena')} ? 'contrasena-requisitos contrasena-error' : 'contrasena-requisitos'">
+            <div th:replace="~{fragmentos :: requisitos-contrasena}"></div>
+            <div id="contrasena-error" class="invalid-feedback" th:if="${#fields.hasErrors('contrasena')}">
+                <p class="mb-0" th:each="error : ${#fields.errors('contrasena')}" th:text="${error}">Error</p>
+            </div>
+        </div>
+
+        <div class="mb-2 form-check">
+            <input type="checkbox" id="aceptaCondiciones" th:field="*{aceptaCondiciones}" class="form-check-input"
+                   th:errorclass="is-invalid"
+                   th:attr="aria-describedby=${#fields.hasErrors('aceptaCondiciones')} ? 'aceptaCondiciones-error'">
+            <label for="aceptaCondiciones" class="form-check-label">
+                <span th:text="#{registro.acepto}">Acepto las</span>
+                <a th:href="@{/legal/condiciones}" target="_blank" rel="noopener" th:text="#{registro.condiciones}">condiciones de uso</a>
+                <span class="visually-hidden" th:text="#{enlace.ventana-nueva}">(se abre en una ventana nueva)</span>
+            </label>
+            <div id="aceptaCondiciones-error" class="invalid-feedback" th:if="${#fields.hasErrors('aceptaCondiciones')}"
+                 th:errors="*{aceptaCondiciones}"></div>
+        </div>
+
+        <div class="mb-3 form-check">
+            <input type="checkbox" id="aceptaPrivacidad" th:field="*{aceptaPrivacidad}" class="form-check-input"
+                   th:errorclass="is-invalid"
+                   th:attr="aria-describedby=${#fields.hasErrors('aceptaPrivacidad')} ? 'aceptaPrivacidad-error'">
+            <label for="aceptaPrivacidad" class="form-check-label">
+                <span th:text="#{registro.acepto-la}">Acepto la</span>
+                <a th:href="@{/legal/privacidad}" target="_blank" rel="noopener" th:text="#{registro.privacidad}">política de privacidad</a>
+                <span class="visually-hidden" th:text="#{enlace.ventana-nueva}">(se abre en una ventana nueva)</span>
+            </label>
+            <div id="aceptaPrivacidad-error" class="invalid-feedback" th:if="${#fields.hasErrors('aceptaPrivacidad')}"
+                 th:errors="*{aceptaPrivacidad}"></div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" th:text="#{registro.enviar}">Crear cuenta</button>
+    </form>
+
+    <p class="mt-4">
+        <span th:text="#{registro.ya-tienes-cuenta}">¿Ya tienes cuenta?</span>
+        <a th:href="@{/acceso}" th:text="#{registro.iniciar-sesion}">Inicia sesión</a>
+    </p>
+</main>
+</body>
+</html>
