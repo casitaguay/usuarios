@@ -244,17 +244,22 @@ que esa sigue activa, la otra no, y que solo la nueva contraseña sirve.
 
 ### Tests for User Story 4 ⚠️
 
-- [ ] T073 [P] [US4] Escribir `core-test/servicio/ServicioCambioContrasenaIT.java`: con la actual correcta cambia el hash, expira las demás sesiones y envía `contrasena-cambiada`; con la actual incorrecta no cambia nada y cuenta como intento fallido (el quinto bloquea la cuenta); nueva igual a la actual o que incumple la política se rechaza
-- [ ] T074 [P] [US4] Escribir `web-test/controlador/CambioContrasenaIT.java`: `GET/POST /cuenta/contrasena` denegados sin sesión (302 a `/acceso`) y permitidos con sesión; cambio correcto redirige a `/inicio?contrasenaCambiada`, cambia el identificador de sesión, mantiene la sesión actual y otra sesión del mismo usuario pierde el acceso; errores devuelven 200 con mensajes por campo; sin CSRF da 403
+- [X] T073 [P] [US4] Escribir `core-test/servicio/ServicioCambioContrasenaIT.java`: con la actual correcta cambia el hash, expira las demás sesiones y envía `contrasena-cambiada`; con la actual incorrecta no cambia nada y cuenta como intento fallido (el quinto bloquea la cuenta); nueva igual a la actual o que incumple la política se rechaza
+- [X] T074 [P] [US4] Escribir `web-test/controlador/CambioContrasenaIT.java`: `GET/POST /cuenta/contrasena` denegados sin sesión (302 a `/acceso`) y permitidos con sesión; cambio correcto redirige a `/inicio?contrasenaCambiada`, cambia el identificador de sesión, mantiene la sesión actual y otra sesión del mismo usuario pierde el acceso; errores devuelven 200 con mensajes por campo; sin CSRF da 403
 
 ### Implementation for User Story 4
 
-- [ ] T075 [US4] Implementar `core/servicio/ServicioCambioContrasena.java` (`cambiar(usuarioId, actual, nueva, idSesionActual)`: verifica la actual con el `PasswordEncoder`, si falla aplica `registrarFallo` y publica `cuenta-bloqueada` si procede; valida política y que sea distinta; cambia el hash, `expirarTodasSalvo` y publica `contrasena-cambiada`)
-- [ ] T076 [P] [US4] Crear `web/formulario/FormularioCambioContrasena.java` (`contrasenaActual`, `contrasena`, `confirmacion`)
-- [ ] T077 [US4] Implementar `web/controlador/ControladorCuenta.java` (`GET/POST /cuenta/contrasena`; tras el cambio llama a `request.changeSessionId()` y redirige a `/inicio?contrasenaCambiada`)
-- [ ] T078 [US4] Crear la vista `web-res/templates/cuenta-contrasena.html` (requisitos de la nueva contraseña visibles, FR-026, y errores accesibles), añadir el mensaje de confirmación en `inicio.html` y los textos en `web-res/messages.properties`
+- [X] T075 [US4] Implementar `core/servicio/ServicioCambioContrasena.java` (`cambiar(usuarioId, actual, nueva, idSesionActual)`: verifica la actual con el `PasswordEncoder`, si falla aplica `registrarFallo` y publica `cuenta-bloqueada` si procede; valida política y que sea distinta; cambia el hash, `expirarTodasSalvo` y publica `contrasena-cambiada`)
+- [X] T076 [P] [US4] Crear `web/formulario/FormularioCambioContrasena.java` (`contrasenaActual`, `contrasena`, `confirmacion`)
+- [X] T077 [US4] Implementar `web/controlador/ControladorCuenta.java` (`GET/POST /cuenta/contrasena`; tras el cambio llama a `request.changeSessionId()` y redirige a `/inicio?contrasenaCambiada`)
+- [X] T078 [US4] Crear la vista `web-res/templates/cuenta-contrasena.html` (requisitos de la nueva contraseña visibles, FR-026, y errores accesibles), añadir el mensaje de confirmación en `inicio.html` y los textos en `web-res/messages.properties`
 
 **Checkpoint**: todas las historias funcionan de forma independiente
+
+**Notas de implementación (historia 4)**:
+
+- T075: una contraseña actual incorrecta lanza `ContrasenaActualIncorrectaException` y la transacción no se deshace (`noRollbackFor`), para que el fallo cuente. El conteo y el aviso de bloqueo reutilizan `OyenteEventosAutenticacion.registrarFallo`, y el email de confirmación `ServicioRecuperacion.avisarContrasenaCambiada`. «Igual a la actual» se devuelve como un incumplimiento más de la política (`contrasena.igual-actual`).
+- T078: `inicio.html` ya mostraba el mensaje `contrasenaCambiada` desde la historia 2.
 
 ---
 

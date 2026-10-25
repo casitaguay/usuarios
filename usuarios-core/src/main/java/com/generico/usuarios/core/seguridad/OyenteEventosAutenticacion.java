@@ -57,10 +57,14 @@ public class OyenteEventosAutenticacion {
         }
     }
 
-    private void registrarFallo(Usuario usuario) {
+    /**
+     * Cuenta un fallo de contraseña y, si bloquea la cuenta, avisa al titular. También lo usa el
+     * cambio de contraseña (historia 4). Debe llamarse dentro de una transacción.
+     */
+    public void registrarFallo(Usuario usuario) {
         var bloqueo = propiedades.bloqueo();
         boolean bloqueada = usuario.registrarFallo(reloj.instant(), bloqueo.intentos(), bloqueo.duracion());
-        LOG.info("Inicio de sesión fallido del usuario {}", usuario.getId());
+        LOG.info("Contraseña incorrecta para el usuario {}", usuario.getId());
         if (bloqueada) {
             LOG.warn("Usuario {} bloqueado {} minutos tras {} intentos fallidos", usuario.getId(),
                     bloqueo.duracion().toMinutes(), bloqueo.intentos());
