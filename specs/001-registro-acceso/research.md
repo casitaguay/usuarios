@@ -82,12 +82,19 @@ Cada apartado sigue el formato Decisión / Justificación / Alternativas conside
   - Cierre de "todas las sesiones" o "las demás sesiones" de un usuario: `SessionRegistry` de Spring
     Security con `HttpSessionEventPublisher`, sin límite de sesiones concurrentes (FR-037).
 - **Justificación**: todo es nativo de Spring. Para varias instancias (SC-010), Spring Session
-  JDBC sustituye la sesión y el registro sin tocar código: `SesionConfig` declara
-  `SessionRegistryImpl` con `@ConditionalOnMissingBean`, y una configuración con
+  JDBC sustituye la sesión y el registro sin tocar código: la autoconfiguración
+  `ConfiguracionPorDefecto` declara `SessionRegistryImpl` con `@ConditionalOnMissingBean`, y una
+  configuración con
   `@ConditionalOnClass(FindByIndexNameSessionRepository.class)` registra
   `SpringSessionBackedSessionRegistry` en cuanto la dependencia está presente. Añadir la
   dependencia y su configuración queda fuera de esta feature.
 - **Alternativas**: Spring Session JDBC desde el inicio (descartado por simplicidad, aclaración 1).
+- **Nota**: los beans sustituibles por un derivado (`SessionRegistry`, `NotificadorEmail`) se
+  declaran solo en `ConfiguracionPorDefecto`, una `@AutoConfiguration` registrada en
+  `AutoConfiguration.imports`. `@ConditionalOnMissingBean` solo es fiable ahí, porque las
+  autoconfiguraciones se evalúan después de los beans del proyecto; en una clase escaneada
+  dependería del orden de escaneo. El resto del core se sigue cargando por escaneo de
+  `com.generico.usuarios`.
 
 ## R7. Enlaces de un solo uso
 
