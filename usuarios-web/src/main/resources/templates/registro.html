@@ -14,7 +14,7 @@
             <label for="nombre" class="form-label" th:text="#{registro.nombre}">Nombre</label>
             <input type="text" id="nombre" th:field="*{nombre}" class="form-control" th:errorclass="is-invalid"
                    maxlength="100" autocomplete="name" required
-                   th:attr="aria-describedby=${#fields.hasErrors('nombre')} ? 'nombre-error'">
+                   th:attr="aria-invalid=${#fields.hasErrors('nombre')} ? 'true', aria-describedby=${#fields.hasErrors('nombre')} ? 'nombre-error'">
             <div id="nombre-error" class="invalid-feedback" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></div>
         </div>
 
@@ -22,7 +22,7 @@
             <label for="email" class="form-label" th:text="#{campo.email}">Email</label>
             <input type="email" id="email" th:field="*{email}" class="form-control" th:errorclass="is-invalid"
                    maxlength="254" autocomplete="email" required
-                   th:attr="aria-describedby=${#fields.hasErrors('email')} ? 'email-error'">
+                   th:attr="aria-invalid=${#fields.hasErrors('email')} ? 'true', aria-describedby=${#fields.hasErrors('email')} ? 'email-error'">
             <div id="email-error" class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
         </div>
 
@@ -32,7 +32,7 @@
             <input type="password" id="contrasena" name="contrasena" class="form-control"
                    th:classappend="${#fields.hasErrors('contrasena')} ? 'is-invalid'"
                    autocomplete="new-password" required
-                   th:attr="aria-describedby=${#fields.hasErrors('contrasena')} ? 'contrasena-requisitos contrasena-error' : 'contrasena-requisitos'">
+                   th:attr="aria-invalid=${#fields.hasErrors('contrasena')} ? 'true', aria-describedby=${#fields.hasErrors('contrasena')} ? 'contrasena-requisitos contrasena-error' : 'contrasena-requisitos'">
             <div th:replace="~{fragmentos :: requisitos-contrasena}"></div>
             <div id="contrasena-error" class="invalid-feedback" th:if="${#fields.hasErrors('contrasena')}">
                 <p class="mb-0" th:each="error : ${#fields.errors('contrasena')}" th:text="${error}">Error</p>
@@ -42,7 +42,7 @@
         <div class="mb-2 form-check">
             <input type="checkbox" id="aceptaCondiciones" th:field="*{aceptaCondiciones}" class="form-check-input"
                    th:errorclass="is-invalid"
-                   th:attr="aria-describedby=${#fields.hasErrors('aceptaCondiciones')} ? 'aceptaCondiciones-error'">
+                   th:attr="aria-invalid=${#fields.hasErrors('aceptaCondiciones')} ? 'true', aria-describedby=${#fields.hasErrors('aceptaCondiciones')} ? 'aceptaCondiciones-error'">
             <label for="aceptaCondiciones" class="form-check-label">
                 <span th:text="#{registro.acepto}">Acepto las</span>
                 <a th:href="@{/legal/condiciones}" target="_blank" rel="noopener" th:text="#{registro.condiciones}">condiciones de uso</a>
@@ -55,7 +55,7 @@
         <div class="mb-3 form-check">
             <input type="checkbox" id="aceptaPrivacidad" th:field="*{aceptaPrivacidad}" class="form-check-input"
                    th:errorclass="is-invalid"
-                   th:attr="aria-describedby=${#fields.hasErrors('aceptaPrivacidad')} ? 'aceptaPrivacidad-error'">
+                   th:attr="aria-invalid=${#fields.hasErrors('aceptaPrivacidad')} ? 'true', aria-describedby=${#fields.hasErrors('aceptaPrivacidad')} ? 'aceptaPrivacidad-error'">
             <label for="aceptaPrivacidad" class="form-check-label">
                 <span th:text="#{registro.acepto-la}">Acepto la</span>
                 <a th:href="@{/legal/privacidad}" target="_blank" rel="noopener" th:text="#{registro.privacidad}">política de privacidad</a>

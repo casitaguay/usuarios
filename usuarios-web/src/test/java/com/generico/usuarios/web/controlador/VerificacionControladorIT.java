@@ -32,6 +32,8 @@ class VerificacionControladorIT extends BaseIT {
     void unEnlaceValidoVerificaLaCuenta() throws Exception {
         mvc.perform(get("/verificacion").param("t", registrar()))
                 .andExpect(status().isOk())
+                .andExpect(content().string(containsString("<title>Cuenta verificada</title>")))
+                .andExpect(content().string(containsString("<h1>Cuenta verificada</h1>")))
                 .andExpect(content().string(containsString("Tu cuenta está verificada")))
                 .andExpect(content().string(containsString("href=\"/acceso\"")));
     }

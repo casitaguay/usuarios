@@ -9,7 +9,7 @@
     <p class="mb-1" th:text="#{formulario.errores}">Revisa los campos marcados:</p>
     <ul class="mb-0">
         <li th:each="error : ${#fields.detailedErrors()}">
-            <a th:href="|#${error.fieldName}|" th:text="${error.message}">Error</a>
+            <a class="alert-link" th:href="|#${error.fieldName}|" th:text="${error.message}">Error</a>
         </li>
     </ul>
 </div>

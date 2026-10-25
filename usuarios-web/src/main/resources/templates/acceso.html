@@ -13,7 +13,7 @@
     </div>
     <div th:if="${param.pendiente}" class="alert alert-warning" role="alert">
         <span th:text="#{acceso.pendiente}">Tu cuenta está pendiente de verificar.</span>
-        <a th:href="@{/verificacion/reenvio}" th:text="#{acceso.pendiente.reenviar}">Reenviar el enlace de verificación</a>
+        <a class="alert-link" th:href="@{/verificacion/reenvio}" th:text="#{acceso.pendiente.reenviar}">Reenviar el enlace de verificación</a>
     </div>
     <div th:if="${param.salida}" class="alert alert-info" role="status" th:text="#{acceso.salida}">Has cerrado la sesión.</div>
     <div th:if="${param.recuperada}" class="alert alert-success" role="status" th:text="#{acceso.recuperada}">

@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <!--/* Plantilla común. Uso: <html th:replace="~{layout :: pagina(~{::title}, ~{::main})}">,
-       con <main id="contenido"> en la página. Sin estilos ni scripts en línea (CSP, research R11). */-->
-<html lang="es" xmlns:th="http://www.thymeleaf.org" th:fragment="pagina(titulo, contenido)">
+       con <main id="contenido"> en la página. Sin estilos ni scripts en línea (CSP, research R11).
+       Los parámetros no deben llamarse como una variable del modelo (p. ej. «titulo» en aviso.html): la ocultarían. */-->
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:fragment="pagina(tituloPagina, contenidoPagina)">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title th:replace="${titulo}">Usuarios</title>
+    <title th:replace="${tituloPagina}">Usuarios</title>
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/aplicacion.css}">
 </head>
@@ -20,7 +21,7 @@
     <div role="status">
         <p th:if="${mensaje}" class="alert alert-info" th:text="#{${mensaje}}">Mensaje</p>
     </div>
-    <main id="contenido" th:replace="${contenido}">Contenido</main>
+    <main id="contenido" th:replace="${contenidoPagina}">Contenido</main>
 </div>
 </body>
 </html>

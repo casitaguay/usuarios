@@ -21,8 +21,11 @@ La guía de arranque y validación está en
 
 ```bash
 ./mvnw verify
-./mvnw -pl usuarios-web spring-boot:run -Dspring-boot.run.profiles=local
+./mvnw verify -Prendimiento
+./mvnw -pl usuarios-web -am spring-boot:run -Dspring-boot.run.profiles=local
 ```
+
+La prueba de rendimiento (100 sesiones durante un minuto) queda fuera del build normal.
 
 ## Estructura
 
@@ -30,6 +33,26 @@ La guía de arranque y validación está en
 |---|---|
 | `usuarios-core` (JAR) | Dominio, servicios, seguridad, migraciones Flyway y emails. Sin controladores ni vistas |
 | `usuarios-web` (WAR) | Controladores, vistas Thymeleaf y arranque. Se despliega en Tomcat 11 o con `java -jar` |
+
+## Cómo adaptarla en un proyecto derivado
+
+La idea es **no modificar `usuarios-core`**, para poder traer después sus mejoras y parches sin
+conflictos. Todo lo siguiente se hace desde `usuarios-web` o desde la configuración.
+
+| Qué | Cómo |
+|---|---|
+| Plazos, límites y política de contraseñas | Propiedades `usuarios.*` (o variables de entorno `USUARIOS_*`). Lista completa en [contracts/configuracion.md](specs/001-registro-acceso/contracts/configuracion.md). Desactivar el auto-registro: `usuarios.registro.habilitado=false` |
+| Emails | Crear en `usuarios-web/src/main/resources/personalizado/email/` un fichero con el mismo nombre que el del core (`verificacion.html`, `verificacion.txt`, `fragmentos.html`, …). Si existe, se usa en lugar del original |
+| Textos de los emails y de los errores de contraseña | Repetir la clave en `usuarios-web/src/main/resources/messages.properties`; prevalece sobre `usuarios/mensajes.properties` del core |
+| Vistas y textos de la web | Están en `usuarios-web`: se editan directamente |
+| Textos legales y su versión | Vistas `templates/legal/*.html` y propiedades `usuarios.legal.condiciones.version` y `usuarios.legal.privacidad.version`. Cada aceptación guarda la versión vigente |
+| Envío de email (otro proveedor, una cola…) | Declarar un bean propio que implemente `NotificadorEmail`; el SMTP por defecto deja de registrarse |
+| Datos propios del usuario | Tablas propias relacionadas por `usuario_id`, con migraciones Flyway a partir de `V1000` (el core usa `V1`–`V999`) |
+| Varias instancias | Añadir Spring Session JDBC (`spring-boot-starter-session-jdbc`) y su configuración: las sesiones pasan a la base de datos y el registro de sesiones las usa sin cambiar código. La limitación de peticiones por origen sigue siendo por instancia; un límite global corresponde al proxy inverso |
+
+Si la aplicación va detrás de un proxy inverso, hay que declarar su IP en
+`usuarios.limite-peticiones.proxies-confianza` para que la limitación use la IP real del cliente
+(`X-Forwarded-For`).
 
 ## Textos legales
 

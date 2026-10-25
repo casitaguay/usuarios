@@ -17,7 +17,7 @@
             <input type="password" id="contrasenaActual" name="contrasenaActual" class="form-control"
                    th:classappend="${#fields.hasErrors('contrasenaActual')} ? 'is-invalid'"
                    autocomplete="current-password" required
-                   th:attr="aria-describedby=${#fields.hasErrors('contrasenaActual')} ? 'contrasenaActual-error'">
+                   th:attr="aria-invalid=${#fields.hasErrors('contrasenaActual')} ? 'true', aria-describedby=${#fields.hasErrors('contrasenaActual')} ? 'contrasenaActual-error'">
             <div id="contrasenaActual-error" class="invalid-feedback" th:if="${#fields.hasErrors('contrasenaActual')}"
                  th:errors="*{contrasenaActual}"></div>
         </div>
@@ -27,7 +27,7 @@
             <input type="password" id="contrasena" name="contrasena" class="form-control"
                    th:classappend="${#fields.hasErrors('contrasena')} ? 'is-invalid'"
                    autocomplete="new-password" required
-                   th:attr="aria-describedby=${#fields.hasErrors('contrasena')} ? 'contrasena-requisitos contrasena-error' : 'contrasena-requisitos'">
+                   th:attr="aria-invalid=${#fields.hasErrors('contrasena')} ? 'true', aria-describedby=${#fields.hasErrors('contrasena')} ? 'contrasena-requisitos contrasena-error' : 'contrasena-requisitos'">
             <div th:replace="~{fragmentos :: requisitos-contrasena}"></div>
             <div id="contrasena-error" class="invalid-feedback" th:if="${#fields.hasErrors('contrasena')}">
                 <p class="mb-0" th:each="error : ${#fields.errors('contrasena')}" th:text="${error}">Error</p>
@@ -39,7 +39,7 @@
             <input type="password" id="confirmacion" name="confirmacion" class="form-control"
                    th:classappend="${#fields.hasErrors('confirmacion')} ? 'is-invalid'"
                    autocomplete="new-password" required
-                   th:attr="aria-describedby=${#fields.hasErrors('confirmacion')} ? 'confirmacion-error'">
+                   th:attr="aria-invalid=${#fields.hasErrors('confirmacion')} ? 'true', aria-describedby=${#fields.hasErrors('confirmacion')} ? 'confirmacion-error'">
             <div id="confirmacion-error" class="invalid-feedback" th:if="${#fields.hasErrors('confirmacion')}"
                  th:errors="*{confirmacion}"></div>
         </div>

@@ -15,7 +15,7 @@
             <label for="email" class="form-label" th:text="#{campo.email}">Email</label>
             <input type="email" id="email" th:field="*{email}" class="form-control" th:errorclass="is-invalid"
                    maxlength="254" autocomplete="email" required
-                   th:attr="aria-describedby=${#fields.hasErrors('email')} ? 'email-error'">
+                   th:attr="aria-invalid=${#fields.hasErrors('email')} ? 'true', aria-describedby=${#fields.hasErrors('email')} ? 'email-error'">
             <div id="email-error" class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
         </div>
 
