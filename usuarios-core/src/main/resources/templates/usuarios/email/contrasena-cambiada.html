@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{email.contrasena-cambiada.asunto}">Tu contraseña se ha cambiado</title>
+</head>
+<body>
+<p th:text="#{email.saludo(${nombre})}">Hola, Ana:</p>
+<p th:text="#{email.contrasena-cambiada.cuerpo(${fechaHora})}">La contraseña de tu cuenta se cambió el ...</p>
+<p th:text="#{email.contrasena-cambiada.no-fuiste}">Si no has sido tú, recupera tu cuenta cuanto antes:</p>
+<p><a th:href="${urlRecuperacion}" th:text="${urlRecuperacion}">https://ejemplo.invalid/recuperacion</a></p>
+<footer th:replace="~{fragmentos.html :: pie}"></footer>
+</body>
+</html>

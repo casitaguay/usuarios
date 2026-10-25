@@ -1,0 +1,4 @@
+/* Estilos propios sobre Bootstrap. Nunca estilos en línea: la CSP los bloquea (research R11). */
+main {
+    max-width: 40rem;
+}

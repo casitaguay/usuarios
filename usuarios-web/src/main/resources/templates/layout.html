@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<!--/* Plantilla común. Uso: <html th:replace="~{layout :: pagina(~{::title}, ~{::main})}">,
+       con <main id="contenido"> en la página. Sin estilos ni scripts en línea (CSP, research R11). */-->
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:fragment="pagina(titulo, contenido)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:replace="${titulo}">Usuarios</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/aplicacion.css}">
+</head>
+<body>
+<a class="visually-hidden-focusable" href="#contenido" th:text="#{layout.saltar}">Saltar al contenido</a>
+<header class="border-bottom mb-4">
+    <div class="container py-3">
+        <span class="fs-5" th:text="#{aplicacion.nombre}">Usuarios</span>
+    </div>
+</header>
+<div class="container">
+    <div role="status">
+        <p th:if="${mensaje}" class="alert alert-info" th:text="#{${mensaje}}">Mensaje</p>
+    </div>
+    <main id="contenido" th:replace="${contenido}">Contenido</main>
+</div>
+</body>
+</html>

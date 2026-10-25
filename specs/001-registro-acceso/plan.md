@@ -111,8 +111,9 @@ usuarios-core/                            # JAR: lógica y seguridad reutilizabl
 usuarios-web/                             # WAR: aplicación desplegable
 ├── pom.xml
 └── src/
+    ├── main/java/com/generico/usuarios/
+    │   └── UsuariosApplication.java # Arranque + SpringBootServletInitializer (paquete raíz: escanea core y web)
     ├── main/java/com/generico/usuarios/web/
-    │   ├── UsuariosApplication.java # Arranque + SpringBootServletInitializer
     │   ├── controlador/             # Acceso, registro, verificación, recuperación, cuenta, legal
     │   └── formulario/              # DTO de formularios con Bean Validation
     ├── main/resources/

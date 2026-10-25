@@ -1,0 +1,15 @@
+# Ejemplo de configuración local con valores ficticios. Cópialo como application-local.yml
+# (excluido de git), pon tu contraseña y arranca con el perfil «local».
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/usuarios
+    username: usuarios
+    password: cambia-esta-clave
+  mail:
+    host: localhost
+    port: 1025
+
+usuarios:
+  url-publica: http://localhost:8080
+  email:
+    remitente: no-responder@ejemplo.invalid

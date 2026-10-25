@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!-- Pie común de los emails HTML. Un derivado lo sustituye en personalizado/email/fragmentos.html -->
+<footer th:fragment="pie">
+    <hr>
+    <p><small th:text="#{email.pie}">Este es un mensaje automático; no respondas a este email.</small></p>
+</footer>
+
+</body>
+</html>

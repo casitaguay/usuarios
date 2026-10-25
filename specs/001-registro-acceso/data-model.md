@@ -14,7 +14,7 @@ Base de datos PostgreSQL; esquema gestionado con Flyway (`V1__usuarios.sql` y si
 | `nombre` | `varchar(100)` | no nulo, 1–100 caracteres tras recortar espacios | FR-001 |
 | `email` | `varchar(254)` | no nulo, único, guardado normalizado (recortado y en minúsculas) | FR-005 |
 | `hash_contrasena` | `varchar(255)` | no nulo, con prefijo de algoritmo (`{argon2}...`) | FR-027, R4 |
-| `estado` | `varchar(20)` | no nulo; `PENDIENTE_VERIFICACION` o `ACTIVO` | FR-008 |
+| `estado` | `varchar(30)` | no nulo; `PENDIENTE_VERIFICACION` o `ACTIVO` | FR-008 |
 | `creado_en` | `timestamptz` | no nulo | FR-010 |
 | `verificado_en` | `timestamptz` | nulo hasta verificar | — |
 | `intentos_fallidos` | `integer` | no nulo, por defecto 0 | FR-012, FR-013 |

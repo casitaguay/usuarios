@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<!--/* Página de error genérica: sin estado, traza ni mensaje interno (FR-034). */-->
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: pagina(~{::title}, ~{::main})}">
+<head>
+    <title th:text="#{error.titulo}">Se ha producido un error</title>
+</head>
+<body>
+<main id="contenido">
+    <h1 th:text="#{error.titulo}">Se ha producido un error</h1>
+    <p th:text="#{error.texto}">No se ha podido completar la petición.</p>
+    <p><a th:href="@{/inicio}" th:text="#{error.volver}">Volver al inicio</a></p>
+</main>
+</body>
+</html>

@@ -1,0 +1,9 @@
+[#{email.saludo(${nombre})}]
+
+[#{email.contrasena-cambiada.cuerpo(${fechaHora})}]
+
+[#{email.contrasena-cambiada.no-fuiste}]
+[(${urlRecuperacion})]
+
+--
+[#{email.pie}]

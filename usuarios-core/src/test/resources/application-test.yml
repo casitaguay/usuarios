@@ -1,0 +1,17 @@
+# Perfil de los tests de integración (core y web). Base de datos dedicada usuarios_test.
+# La contraseña no va aquí: SPRING_DATASOURCE_PASSWORD o el fichero pgpass del driver de PostgreSQL.
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/usuarios_test
+    username: usuarios
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  messages:
+    basename: messages,usuarios/mensajes
+
+usuarios:
+  url-publica: http://localhost:8080
+  email:
+    remitente: no-responder@ejemplo.invalid
