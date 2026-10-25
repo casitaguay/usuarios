@@ -1,0 +1,9 @@
+[#{email.saludo(${nombre})}]
+
+[#{email.cuenta-bloqueada.cuerpo(${minutos})}]
+
+[#{email.cuenta-bloqueada.recuperar}]
+[(${urlRecuperacion})]
+
+--
+[#{email.pie}]

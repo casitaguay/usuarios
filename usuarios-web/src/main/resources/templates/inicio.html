@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: pagina(~{::title}, ~{::main})}">
+<head>
+    <title th:text="#{inicio.titulo}">Inicio</title>
+</head>
+<body>
+<main id="contenido">
+    <h1 th:text="#{inicio.saludo(${nombre})}">Hola, Ana</h1>
+
+    <div th:if="${param.contrasenaCambiada}" class="alert alert-success" role="status" th:text="#{inicio.contrasena-cambiada}">
+        Tu contraseña se ha cambiado.
+    </div>
+
+    <ul class="list-unstyled">
+        <li><a th:href="@{/cuenta/contrasena}" th:text="#{inicio.cambiar-contrasena}">Cambiar la contraseña</a></li>
+    </ul>
+
+    <!--/* Cierre de sesión solo por POST con token CSRF: no se puede provocar desde un enlace externo */-->
+    <form th:action="@{/salir}" method="post">
+        <button type="submit" class="btn btn-outline-secondary" th:text="#{inicio.salir}">Cerrar sesión</button>
+    </form>
+</main>
+</body>
+</html>

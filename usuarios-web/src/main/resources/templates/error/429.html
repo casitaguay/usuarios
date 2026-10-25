@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<!--/* Freno por demasiadas peticiones desde un origen (FR-014). Spring Boot la usa para los errores 429. */-->
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: pagina(~{::title}, ~{::main})}">
+<head>
+    <title th:text="#{demasiados-intentos.titulo}">Demasiados intentos</title>
+</head>
+<body>
+<main id="contenido">
+    <h1 th:text="#{demasiados-intentos.titulo}">Demasiados intentos</h1>
+    <p th:text="#{demasiados-intentos.texto}">Se han recibido demasiados intentos desde tu conexión. Espera unos minutos y vuelve a intentarlo.</p>
+</main>
+</body>
+</html>

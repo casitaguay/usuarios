@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: pagina(~{::title}, ~{::main})}">
+<head>
+    <title th:text="#{acceso.titulo}">Iniciar sesión</title>
+</head>
+<body>
+<main id="contenido">
+    <h1 th:text="#{acceso.titulo}">Iniciar sesión</h1>
+
+    <!--/* Un único mensaje genérico para cualquier fallo: no revela si la cuenta existe o está bloqueada (FR-028) */-->
+    <div th:if="${param.error}" class="alert alert-danger" role="alert" th:text="#{acceso.error}">
+        Email o contraseña incorrectos.
+    </div>
+    <div th:if="${param.pendiente}" class="alert alert-warning" role="alert">
+        <span th:text="#{acceso.pendiente}">Tu cuenta está pendiente de verificar.</span>
+        <a th:href="@{/verificacion/reenvio}" th:text="#{acceso.pendiente.reenviar}">Reenviar el enlace de verificación</a>
+    </div>
+    <div th:if="${param.salida}" class="alert alert-info" role="status" th:text="#{acceso.salida}">Has cerrado la sesión.</div>
+    <div th:if="${param.recuperada}" class="alert alert-success" role="status" th:text="#{acceso.recuperada}">
+        Tu contraseña se ha cambiado. Ya puedes iniciar sesión.
+    </div>
+
+    <form th:action="@{/acceso}" method="post">
+        <div class="mb-3">
+            <label for="email" class="form-label" th:text="#{campo.email}">Email</label>
+            <input type="email" id="email" name="email" class="form-control" maxlength="254" autocomplete="username" required>
+        </div>
+        <div class="mb-3">
+            <label for="contrasena" class="form-label" th:text="#{campo.contrasena}">Contraseña</label>
+            <input type="password" id="contrasena" name="contrasena" class="form-control" autocomplete="current-password" required>
+        </div>
+        <button type="submit" class="btn btn-primary" th:text="#{acceso.enviar}">Iniciar sesión</button>
+    </form>
+
+    <ul class="list-unstyled mt-4">
+        <li><a th:href="@{/recuperacion}" th:text="#{acceso.olvido}">¿Has olvidado tu contraseña?</a></li>
+        <li th:if="${registroHabilitado}">
+            <span th:text="#{acceso.sin-cuenta}">¿No tienes cuenta?</span>
+            <a th:href="@{/registro}" th:text="#{acceso.crear-cuenta}">Crear una cuenta</a>
+        </li>
+    </ul>
+</main>
+</body>
+</html>

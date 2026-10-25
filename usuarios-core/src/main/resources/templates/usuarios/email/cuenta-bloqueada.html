@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{email.cuenta-bloqueada.asunto}">Tu cuenta se ha bloqueado temporalmente</title>
+</head>
+<body>
+<p th:text="#{email.saludo(${nombre})}">Hola, Ana:</p>
+<p th:text="#{email.cuenta-bloqueada.cuerpo(${minutos})}">Tras varios intentos fallidos, tu cuenta queda bloqueada 15 minutos.</p>
+<p th:text="#{email.cuenta-bloqueada.recuperar}">Si no has sido tú o no recuerdas tu contraseña, puedes cambiarla aquí; eso también levanta el bloqueo:</p>
+<p><a th:href="${urlRecuperacion}" th:text="${urlRecuperacion}">https://ejemplo.invalid/recuperacion</a></p>
+<footer th:replace="~{fragmentos.html :: pie}"></footer>
+</body>
+</html>

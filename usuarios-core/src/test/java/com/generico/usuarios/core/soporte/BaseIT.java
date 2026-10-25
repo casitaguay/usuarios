@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
 import com.generico.usuarios.core.email.NotificadorEmailEnMemoria;
+import com.generico.usuarios.core.seguridad.LimitadorPeticiones;
 
 /** Base de los tests de integración: PostgreSQL real ({@code usuarios_test}) y tablas vacías en cada test. */
 @SpringBootTest
@@ -26,10 +27,14 @@ public abstract class BaseIT {
     @Autowired
     protected NotificadorEmailEnMemoria emails;
 
+    @Autowired
+    protected LimitadorPeticiones limitador;
+
     @BeforeEach
     void limpiarEstado() {
         jdbc.execute("TRUNCATE usuario CASCADE");
         reloj.reiniciar();
         emails.limpiar();
+        limitador.reiniciar();
     }
 }

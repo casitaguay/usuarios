@@ -33,3 +33,9 @@ management:
     health:
       show-details: never
       show-components: never
+
+logging:
+  level:
+    # Avisa de que hay un AuthenticationProvider propio: es intencionado, para que no exista un
+    # segundo proveedor por defecto que se salte el bloqueo de cuentas (SeguridadConfig)
+    org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer: ERROR
