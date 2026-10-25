@@ -19,11 +19,13 @@ el estado actual y cómo continuar.
 
 - Especificaciones por feature: `specs/NNN-nombre/` (`spec.md`, `plan.md`, `research.md`,
   `data-model.md`, `contracts/`, `quickstart.md`, `tasks.md`)
-- Feature actual: `specs/001-registro-acceso/`, pendiente de implementar con `/speckit-implement`
+- Feature actual: `specs/001-registro-acceso/`, implementada hasta la historia 2 (T001–T065); se
+  continúa con `/speckit-implement`
 - Skills de Spec Kit: `.claude/skills/speckit-*`
 
 ## Comandos
 
 - Tests: `./mvnw verify` (necesita PostgreSQL local con la base de datos `usuarios_test`)
 - Rendimiento: `./mvnw verify -Prendimiento`
-- Arrancar: `./mvnw -pl usuarios-web spring-boot:run -Dspring-boot.run.profiles=local`
+- Arrancar: `./mvnw -pl usuarios-web -am spring-boot:run -Dspring-boot.run.profiles=local`
+  (en este equipo, puerto 8081; emails en Mailpit, <http://localhost:8025>)

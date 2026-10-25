@@ -1,7 +1,8 @@
 # Contexto del proyecto «usuarios»
 
-Resumen de todo lo decidido y hecho hasta el **2026-10-25**, para que cualquier persona (o sesión
-de Claude) pueda continuar sin el historial de la conversación original.
+Resumen de todo lo decidido y hecho hasta el **2026-10-25** (actualizado tras implementar las
+historias 1 y 2), para que cualquier persona (o sesión de Claude) pueda continuar sin el historial
+de la conversación original.
 
 ## 1. Qué es
 
@@ -19,10 +20,11 @@ autorización y la administración de usuarios ya resueltas. Es un **proyecto pe
 | Elemento | Estado |
 |---|---|
 | Constitución v1.0.0 | Hecha: [.specify/memory/constitution.md](../.specify/memory/constitution.md) |
-| Feature 001 «Registro y acceso» | Spec, clarificación, plan, tareas y análisis hechos; **pendiente de implementar** |
+| Feature 001 «Registro y acceso» | Fases 1–4 implementadas (T001–T065): base, historia 1 y historia 2, es decir, el **MVP**. Pendientes las historias 3 y 4 y el remate (T066–T086) |
 | Rama de trabajo | `001-registro-acceso` (subida a GitHub, sin pull request todavía) |
-| Código Java | Ninguno todavía |
-| Siguiente paso | `/speckit-implement`, empezando por Setup y Foundational (T001–T038) |
+| Tests | 75 en verde con `./mvnw verify` (20 unitarios y 55 de integración contra PostgreSQL) |
+| CI en GitHub | En verde en cada push. CodeQL aún no se ha ejecutado: solo salta en push o pull request a `main` y semanalmente |
+| Siguiente paso | Fase 5, historia 3: recuperación de contraseña (T066–T072) |
 
 Historial de commits:
 
@@ -33,6 +35,14 @@ Historial de commits:
 | `0d0a7c7` | `001-registro-acceso` | Plan técnico, research, modelo de datos, contratos y quickstart |
 | `e4a784d` | `001-registro-acceso` | Tareas (82 en la primera versión) |
 | `bda1284` | `001-registro-acceso` | Correcciones del análisis; tareas pasan a 86 |
+| `895bbaf` | `001-registro-acceso` | Este documento y `CLAUDE.md` |
+| `96adce2` | `001-registro-acceso` | Ajuste de tareas: beans sustituibles en una autoconfiguración y arranque de los tests del core |
+| `ae3ea78` | `001-registro-acceso` | Fases 1 y 2 (T001–T038) |
+| `8d84df6` | `001-registro-acceso` | Correcciones al ejecutar por primera vez los tests contra PostgreSQL |
+| `d3891f1` | `001-registro-acceso` | Historia 1: registro y verificación (T039–T052) |
+| `5fc8b26` | `001-registro-acceso` | Historia 2: acceso, bloqueo, sesión y limitación por origen (T053–T065) |
+
+Las desviaciones respecto al texto de las tareas están anotadas en `tasks.md`, al final de cada fase.
 
 ## 3. Entorno local de desarrollo
 
@@ -41,16 +51,19 @@ Historial de commits:
 | Sistema | Windows 10 Pro; terminal PowerShell (también Git Bash) |
 | Java | 25.0.4 LTS instalado |
 | Maven | 3.10.0 instalado (el proyecto usará Maven Wrapper `mvnw`) |
-| PostgreSQL | 18.6 como servicio de Windows; `psql` en el PATH |
-| Bases de datos | `usuarios` y `usuarios_test` **creadas**, propiedad del rol `usuarios` |
+| PostgreSQL | 18.6 como servicio de Windows; `psql` en el PATH. pgAdmin 4 instalado |
+| Bases de datos | `usuarios` y `usuarios_test`, propiedad del rol `usuarios`, ambas con el esquema V1 aplicado por Flyway |
+| Contraseña de la base de datos | En `%APPDATA%\postgresql\pgpass.conf` (fuera del repositorio). El driver la lee ahí: ni los tests ni `application-local.yml` llevan contraseña |
 | Docker | **No instalado** (por eso no se usa Testcontainers todavía) |
-| GitHub CLI (`gh`) | **No instalado**: los pull requests se crean desde la web |
-| Mailpit | **Pendiente de descargar** (ejecutable de Windows; SMTP `localhost:1025`, web `localhost:8025`) |
-| Git | Identidad configurada **solo en este repositorio** con el usuario `casitaguay` y su email *noreply* de GitHub. El push funciona con Git Credential Manager (credenciales ya guardadas) |
+| GitHub CLI (`gh`) | 2.103 instalado y con sesión de `casitaguay` (permisos `repo` y `workflow`) |
+| Mailpit | Instalado; hay que arrancar `mailpit.exe` a mano. SMTP `localhost:1025`, web <http://localhost:8025>. Captura los emails y no los entrega a nadie |
+| Puerto 8080 | Ocupado por un Apache (`httpd`) del equipo; la aplicación usa el **8081** en local |
+| Eclipse | Spring Tools. Se arranca `UsuariosApplication` (en `usuarios-web`) como *Spring Boot App* con el perfil `local` en la pestaña Spring Boot. El push desde Eclipse necesita un token con permiso `workflow` |
+| Git | Identidad configurada **solo en este repositorio** con el usuario `casitaguay` y su email *noreply* de GitHub. Push por terminal con Git Credential Manager o `gh` |
 
-La contraseña del rol `usuarios` no está en el repositorio: va en
-`usuarios-web/src/main/resources/application-local.yml`, que está excluido de git (se creará a
-partir de `application-local.example.yml` al implementar).
+`usuarios-web/src/main/resources/application-local.yml` existe en este equipo y está excluido de
+git: base de datos `usuarios`, Mailpit, puerto 8081 y `usuarios.url-publica: http://localhost:8081`.
+Se empaqueta dentro del WAR local, así que ese WAR no debe salir del equipo.
 
 ## 4. Configuración de GitHub
 
@@ -129,6 +142,20 @@ sesiones simultáneas sin límite; borrado de cuentas sin verificar a los 7 día
 verde para `main`), 1 alto (no estaba definido cómo personalizar plantillas), 5 medios y 4 bajos.
 Todos corregidos en `bda1284`. Cobertura de requisitos por tareas: completa.
 
+**Decisiones tomadas al implementar** (detalle en las notas de `tasks.md`):
+
+- Los beans que un derivado puede sustituir (`NotificadorEmail`, `SessionRegistry` y el ejecutor
+  de emails) están en la autoconfiguración `ConfiguracionPorDefecto`, porque
+  `@ConditionalOnMissingBean` solo es fiable ahí.
+- `UsuariosApplication` está en el paquete raíz `com.generico.usuarios` para que el escaneo y JPA
+  cubran el core sin más anotaciones.
+- Argon2id con los parámetros mínimos de OWASP (19 MiB, 2 iteraciones).
+- El `DaoAuthenticationProvider` es el **único** proveedor de autenticación; si no, Spring
+  reintentaría con uno por defecto y se saltaría el bloqueo.
+- Una vista genérica `aviso.html` sirve para todas las páginas de resultado; la del 429 es
+  `error/429.html`. La interfaz está fija en español.
+- `usuario.estado` es `varchar(30)` (en el modelo inicial era 20 y no cabía `PENDIENTE_VERIFICACION`).
+
 **Tareas**: 86 en 7 fases. Setup (T001–T009), Foundational (T010–T038), US1 (T039–T052),
 US2 (T053–T065), US3 (T066–T072), US4 (T073–T078) y Polish (T079–T086).
 
@@ -144,12 +171,13 @@ US2 (T053–T065), US3 (T066–T072), US4 (T073–T078) y Polish (T079–T086).
 
 ## 9. Cómo continuar
 
-1. Descargar Mailpit y arrancarlo.
-2. En la rama `001-registro-acceso`, ejecutar `/speckit-implement` **por fases**, parando al final
-   de cada una para revisar: primero Setup y Foundational (T001–T038), después el MVP (US1 y US2).
-3. Al crear `application-local.yml`, poner ahí la contraseña real del rol `usuarios`.
-4. Abrir el pull request a `main` desde la web de GitHub; tras la primera ejecución de CI y CodeQL,
-   completar T085 (checks obligatorios en el ruleset).
+1. En la rama `001-registro-acceso`, seguir con `/speckit-implement` **por fases**, parando al
+   final de cada una para revisar: historia 3 (T066–T072), historia 4 (T073–T078) y remate
+   (T079–T086).
+2. Para probar a mano: arrancar Mailpit, arrancar la aplicación con el perfil `local` y abrir
+   <http://localhost:8081/registro>.
+3. Abrir el pull request a `main` (con `gh`, previa confirmación del propietario); tras la primera
+   ejecución de CI y CodeQL, completar T085 (checks obligatorios en el ruleset).
 
 ## 10. Forma de trabajar acordada
 
