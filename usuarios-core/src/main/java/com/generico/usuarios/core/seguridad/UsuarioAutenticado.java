@@ -24,6 +24,20 @@ public class UsuarioAutenticado extends User {
         return id;
     }
 
+    /**
+     * Igualdad por id y no por email (como en {@link User}): el registro de sesiones agrupa por
+     * principal, y una cuenta nueva con el email de otra borrada no debe heredar sus sesiones.
+     */
+    @Override
+    public boolean equals(Object otro) {
+        return otro instanceof UsuarioAutenticado u && id.equals(u.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
+
     public String getNombre() {
         return nombre;
     }

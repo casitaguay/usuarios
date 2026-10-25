@@ -39,6 +39,19 @@ class ServicioSesionesTest {
         assertThat(registro.getSessionInformation("a2").isExpired()).isTrue();
     }
 
+    @Test
+    void unaCuentaNuevaConElEmailDeOtraNoSeMezclaConSusSesiones() {
+        var anterior = principal("ana@ejemplo.com");
+        var nueva = principal("ana@ejemplo.com");
+        registro.registerNewSession("vieja", anterior);
+        registro.registerNewSession("nueva", nueva);
+
+        servicio.expirarTodas(nueva.getId());
+
+        assertThat(registro.getSessionInformation("nueva").isExpired()).isTrue();
+        assertThat(registro.getSessionInformation("vieja").isExpired()).isFalse();
+    }
+
     private static UsuarioAutenticado principal(String email) {
         return new UsuarioAutenticado(UUID.randomUUID(), email, "Nombre", "{argon2}hash");
     }
